@@ -1,1 +1,1 @@
-They're bloody xul apps aren't they?
+#They're bloody xul apps aren't they?
