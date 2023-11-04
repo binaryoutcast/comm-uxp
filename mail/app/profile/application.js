@@ -143,9 +143,6 @@ pref("app.support.baseURL", "about:blank");
 // Show error messages in error console.
 pref("javascript.options.showInConsole", true);
 
-// Enable ION Inlining because js perf loss vs web induced crash of inline ES Modules risk is much MUCH lower
-pref("javascript.options.ion.inlining", true);
-
 // Disable WASM and its baseline jit (platform default is true)
 pref("javascript.options.wasm",             false);
 pref("javascript.options.wasm_baselinejit", false);
@@ -260,9 +257,6 @@ pref("browser.preferences.animateFadeIn", false);
 
 // load the Preferences in a tab
 pref("mail.preferences.inContent", false);
-
-pref("browser.download.show_plugins_in_list", false);
-pref("browser.download.hide_plugins_without_extensions", true);
 
 pref("accessibility.typeaheadfind", false);
 pref("accessibility.typeaheadfind.timeout", 5000);
@@ -417,22 +411,6 @@ pref("browser.send_pings", false);
 pref("browser.chrome.toolbar_tips",         true);
 pref("browser.xul.error_pages.enabled", true);
 pref("browser.xul.error_pages.expert_bad_cert", false);
-
-// Attachment download manager settings
-pref("mail.attachment.store.version", 0);
-pref("browser.download.useDownloadDir", false);
-pref("browser.download.folderList", 0);
-pref("browser.download.manager.showAlertOnComplete", false);
-pref("browser.download.manager.showAlertInterval", 2000);
-pref("browser.download.manager.retention", 1);
-pref("browser.download.manager.showWhenStarting", false);
-pref("browser.download.manager.closeWhenDone", true);
-pref("browser.download.manager.focusWhenStarting", false);
-pref("browser.download.manager.flashCount", 0);
-pref("browser.download.manager.addToRecentDocs", true);
-#ifndef XP_MACOSX
-pref("browser.helperApps.deleteTempFileOnExit", true);
-#endif
 
 pref("spellchecker.dictionary", "");
 // Dictionary download preference

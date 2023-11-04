@@ -133,6 +133,5 @@
                 accesskey="&blockAutoRefresh.accesskey;"
                 preference="accessibility.blockautorefresh"/>
     </vbox>
-
   </prefpane>
 </overlay>

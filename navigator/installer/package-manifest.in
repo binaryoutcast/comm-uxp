@@ -70,6 +70,9 @@
 #ifndef MOZ_STATIC_JS
 @BINPATH@/@DLL_PREFIX@mozjs@DLL_SUFFIX@
 #endif
+#ifdef GKMEDIAS_SHARED_LIBRARY
+@BINPATH@/@DLL_PREFIX@gkmedias@DLL_SUFFIX@
+#endif
 #ifdef MOZ_DMD
 @BINPATH@/@DLL_PREFIX@dmd@DLL_SUFFIX@
 #endif
@@ -188,17 +191,6 @@
 @RESPATH@/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}/icon.png
 @RESPATH@/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}/install.rdf
 @RESPATH@/extensions/{972ce4c6-7e08-4474-a285-3208198ce6fd}/preview.png
-#endif
-
-; modern theme
-#ifdef MOZ_OMNIJAR
-@RESPATH@/extensions/*.xpi
-#else
-@RESPATH@/extensions/modern@themes.mozilla.org/chrome/modern@JAREXT@
-@RESPATH@/extensions/modern@themes.mozilla.org/chrome.manifest
-@RESPATH@/extensions/modern@themes.mozilla.org/icon.png
-@RESPATH@/extensions/modern@themes.mozilla.org/install.rdf
-@RESPATH@/extensions/modern@themes.mozilla.org/preview.png
 #endif
 
 ; shell icons
