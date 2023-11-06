@@ -41,7 +41,6 @@ export BINOC_CONFIG_GUESS=$BINOC_CONFIG_GUESS
 if [ -n "$BINOC_GIT" ]; then
   BINOC_COMM_BRANCH=`"${BINOC_GIT}" symbolic-ref --short HEAD 2>/dev/null | tr [:upper:] [:lower:]` 
   BINOC_PLATFORM_BRANCH=`cd ${BINOC_PLATFORM} && "${BINOC_GIT}" symbolic-ref --short HEAD 2>/dev/null | tr [:upper:] [:lower:]`
-  BINOC_CALENDAR_BRANCH=`cd ${BINOC_CALENDAR} && "${BINOC_GIT}" symbolic-ref --short HEAD 2>/dev/null | tr [:upper:] [:lower:]`
 
   # if we don't have a comm branch then don't even bother
   if [ -n "$BINOC_COMM_BRANCH" ]; then
@@ -83,64 +82,6 @@ elif [[ "$1" == "superclobber" && -d "../.obj" ]]; then
 elif [ "$1" == "version" ]; then
   # This will execute version2k.py and pass any remaining args to it
   $BINOC_PYTHON ./build/version2k.py ${@:2}
-elif [ "$1" == "checkout" ] && [ -n "$BINOC_GIT" ]; then
-  printf "binoc-central:\n"
-
-  if [ "$2" == "absolute-trunk" ]; then
-      "$BINOC_GIT" checkout TRUNK
-  elif [ "$2" == "release" ]; then
-      "$BINOC_GIT" checkout RELEASE
-  elif [ -n "$2" ]; then
-    printf "Please use git directly for arbitrary branch switching.\n"
-    exit 1
-  else
-    _commBranch=`git rev-parse --abbrev-ref HEAD`
-    if [ "$_commBranch" != "HEAD" ]; then 
-      printf "On branch $_commBranch\n"
-    else
-      printf "Not currently on a branch. Please use git directly or 'mach checkout (release|absolute-trunk)'.\n"
-      exit 1
-    fi
-  fi
-
-  "$BINOC_GIT" pull
-
-  if [ ! -f $BINOC_PLATFORM/CLOBBER ]; then
-    "$BINOC_GIT" submodule init platform calendar
-  fi
-
-  if [ "$2" == "absolute-trunk" ]; then
-    printf "\nUnified XUL Platform:\n"
-    cd $BINOC_PLATFORM
-    if [ "$BINOC_PLATFORM_BRANCH" != "master" ]; then
-      "$BINOC_GIT" checkout master
-    fi
-    "$BINOC_GIT" pull
-
-    cd ../$BINOC_CALENDAR
-    printf "\nCalendar:\n"
-    if [ "$BINOC_CALENDAR_BRANCH" != "trunk" ]; then
-      "$BINOC_GIT" checkout TRUNK
-    fi
-    "$BINOC_GIT" pull
-  else
-    "$BINOC_GIT" submodule update -f
-  fi
-elif [ "$1" == "reset" ] && [ -n "$BINOC_GIT" ]; then
-  if [ "$2" == "comm" ]; then
-    printf "binoc-central:\n"
-    "$BINOC_GIT" reset --hard
-  elif [ "$2" == "platform" ]; then
-    printf "Unified XUL Platform:\n"
-    cd $BINOC_PLATFORM
-    "$BINOC_GIT" reset --hard
-  elif [ "$2" == "calendar" ]; then
-    printf "Calendar:\n"
-    cd $BINOC_CALENDAR
-    "$BINOC_GIT" reset --hard
-  else
-    printf "Reset what?\n"
-  fi
 elif [ "$1" == "webpatch" ] && [ -n "$BINOC_GIT" ] && [ -n "$BINOC_CURL" ]; then
   if [ "$2" == "platform" ]; then
     printf "Unified XUL Platform:\n"

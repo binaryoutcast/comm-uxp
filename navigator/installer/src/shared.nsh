@@ -10,12 +10,12 @@
   System::Call "kernel32::ProcessIdToSessionId(i $0, *i ${NSIS_MAX_STRLEN} r9)"
 
   ; Determine if we're the protected UserChoice default or not. If so fix the
-  ; start menu tile.  In case there are 2 Borealis installations, we only do
+  ; start menu tile.  In case there are 2 Mariner installations, we only do
   ; this if the application being updated is the default.
   ReadRegStr $0 HKCU "Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" "ProgId"
-  ${If} $0 == "BorealisURL"
+  ${If} $0 == "MarinerURL"
   ${AndIf} $9 != 0 ; We're not running in session 0
-    ReadRegStr $0 HKCU "Software\Classes\BorealisURL\shell\open\command" ""
+    ReadRegStr $0 HKCU "Software\Classes\MarinerURL\shell\open\command" ""
     ${GetPathFromString} "$0" $0
     ${GetParent} "$0" $0
     ${If} ${FileExists} "$0"
@@ -34,7 +34,7 @@
   ${UpdateProtocolHandlers}
 
   ; setup the application model id registration value
-  ${InitHashAppModelId} "$INSTDIR" "Software\Binary Outcast\${AppName}\TaskBarIDs"
+  ${InitHashAppModelId} "$INSTDIR" "Software\BinOC\${AppName}\TaskBarIDs"
 
   ; Win7 taskbar and start menu link maintenance
   Call FixShortcutAppModelIDs
@@ -282,13 +282,13 @@
   ClearErrors
   EnumRegKey $7 HKCR "${FILE_TYPE}" 0
   ${If} ${Errors}
-    WriteRegStr SHCTX "SOFTWARE\Classes\${FILE_TYPE}"  "" "BorealisHTML"
+    WriteRegStr SHCTX "SOFTWARE\Classes\${FILE_TYPE}"  "" "MarinerHTML"
   ${EndIf}
-  WriteRegStr SHCTX "SOFTWARE\Classes\${FILE_TYPE}\OpenWithProgids" "BorealisHTML" ""
+  WriteRegStr SHCTX "SOFTWARE\Classes\${FILE_TYPE}\OpenWithProgids" "MarinerHTML" ""
 !macroend
 !define AddAssociationIfNoneExist "!insertmacro AddAssociationIfNoneExist"
 
-; Adds the protocol and file handler registry entries for making Borealis the
+; Adds the protocol and file handler registry entries for making Mariner the
 ; default handler (uses SHCTX).
 !macro SetHandlers
   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
@@ -296,30 +296,30 @@
   StrCpy $0 "SOFTWARE\Classes"
   StrCpy $2 "$\"$8$\" -osint -url $\"%1$\""
 
-  ; Associate the file handlers with BorealisHTML
+  ; Associate the file handlers with MarinerHTML
   ReadRegStr $6 SHCTX "$0\.htm" ""
-  ${If} "$6" != "BorealisHTML"
-    WriteRegStr SHCTX "$0\.htm"   "" "BorealisHTML"
+  ${If} "$6" != "MarinerHTML"
+    WriteRegStr SHCTX "$0\.htm"   "" "MarinerHTML"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.html" ""
-  ${If} "$6" != "BorealisHTML"
-    WriteRegStr SHCTX "$0\.html"  "" "BorealisHTML"
+  ${If} "$6" != "MarinerHTML"
+    WriteRegStr SHCTX "$0\.html"  "" "MarinerHTML"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.shtml" ""
-  ${If} "$6" != "BorealisHTML"
-    WriteRegStr SHCTX "$0\.shtml" "" "BorealisHTML"
+  ${If} "$6" != "MarinerHTML"
+    WriteRegStr SHCTX "$0\.shtml" "" "MarinerHTML"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.xht" ""
-  ${If} "$6" != "BorealisHTML"
-    WriteRegStr SHCTX "$0\.xht"   "" "BorealisHTML"
+  ${If} "$6" != "MarinerHTML"
+    WriteRegStr SHCTX "$0\.xht"   "" "MarinerHTML"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.xhtml" ""
-  ${If} "$6" != "BorealisHTML"
-    WriteRegStr SHCTX "$0\.xhtml" "" "BorealisHTML"
+  ${If} "$6" != "MarinerHTML"
+    WriteRegStr SHCTX "$0\.xhtml" "" "MarinerHTML"
   ${EndIf}
 
   ${AddAssociationIfNoneExist} ".oga"
@@ -327,12 +327,12 @@
   ${AddAssociationIfNoneExist} ".ogv"
   ${AddAssociationIfNoneExist} ".webm"
 
-  ; An empty string is used for the 5th param because BorealisHTML is not a
+  ; An empty string is used for the 5th param because MarinerHTML is not a
   ; protocol handler
-  ${AddDisabledDDEHandlerValues} "BorealisHTML" "$2" "$8,1" \
+  ${AddDisabledDDEHandlerValues} "MarinerHTML" "$2" "$8,1" \
                                  "${AppRegName} HTML Document" ""
 
-  ${AddDisabledDDEHandlerValues} "BorealisURL" "$2" "$8,1" "${AppRegName} URL" \
+  ${AddDisabledDDEHandlerValues} "MarinerURL" "$2" "$8,1" "${AppRegName} URL" \
                                  "true"
   ; An empty string is used for the 4th & 5th params because the following
   ; protocol handlers already have a display name and the additional keys
@@ -343,7 +343,7 @@
 !macroend
 !define SetHandlers "!insertmacro SetHandlers"
 
-; Adds the HKLM\Software\Clients\StartMenuInternet\Borealis.EXE registry
+; Adds the HKLM\Software\Clients\StartMenuInternet\Mariner.EXE registry
 ; entries (does not use SHCTX).
 ;
 ; The values for StartMenuInternet are only valid under HKLM and there can only
@@ -402,41 +402,41 @@
   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationIcon" "$8,0"
   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationName" "${BrandShortName}"
 
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".htm"   "BorealisHTML"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".html"  "BorealisHTML"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".shtml" "BorealisHTML"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xht"   "BorealisHTML"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xhtml" "BorealisHTML"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".htm"   "MarinerHTML"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".html"  "MarinerHTML"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".shtml" "MarinerHTML"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xht"   "MarinerHTML"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xhtml" "MarinerHTML"
 
   WriteRegStr ${RegKey} "$0\Capabilities\StartMenu" "StartMenuInternet" "$R9"
 
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "ftp"    "BorealisURL"
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "http"   "BorealisURL"
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "https"  "BorealisURL"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "ftp"    "MarinerURL"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "http"   "MarinerURL"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "https"  "MarinerURL"
 
   ; Vista Registered Application
   WriteRegStr ${RegKey} "Software\RegisteredApplications" "${AppRegName}" "$0\Capabilities"
 !macroend
 !define SetStartMenuInternet "!insertmacro SetStartMenuInternet"
 
-; The IconHandler reference for BorealisHTML can end up in an inconsistent state
+; The IconHandler reference for MarinerHTML can end up in an inconsistent state
 ; due to changes not being detected by the IconHandler for side by side
 ; installs (see bug 268512). The symptoms can be either an incorrect icon or no
-; icon being displayed for files associated with Borealis (does not use SHCTX).
+; icon being displayed for files associated with Mariner (does not use SHCTX).
 !macro FixShellIconHandler RegKey
   ClearErrors
-  ReadRegStr $1 ${RegKey} "Software\Classes\BorealisHTML\ShellEx\IconHandler" ""
+  ReadRegStr $1 ${RegKey} "Software\Classes\MarinerHTML\ShellEx\IconHandler" ""
   ${Unless} ${Errors}
-    ReadRegStr $1 ${RegKey} "Software\Classes\BorealisHTML\DefaultIcon" ""
+    ReadRegStr $1 ${RegKey} "Software\Classes\MarinerHTML\DefaultIcon" ""
     ${GetLongPath} "$INSTDIR\${FileMainEXE}" $2
     ${If} "$1" != "$2,1"
-      WriteRegStr ${RegKey} "Software\Classes\BorealisHTML\DefaultIcon" "" "$2,1"
+      WriteRegStr ${RegKey} "Software\Classes\MarinerHTML\DefaultIcon" "" "$2,1"
     ${EndIf}
   ${EndUnless}
 !macroend
 !define FixShellIconHandler "!insertmacro FixShellIconHandler"
 
-; Add Software\Binary Outcast\ registry entries (uses SHCTX).
+; Add Software\BinOC\ registry entries (uses SHCTX).
 !macro SetAppKeys
   ; Check if this is an ESR release and if so add registry values so it is
   ; possible to determine that this is an ESR install (bug 726781).
@@ -449,14 +449,14 @@
   ${EndIf}
 
   ${GetLongPath} "$INSTDIR" $8
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Main"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Main"
   ${WriteRegStr2} $TmpVal "$0" "Install Directory" "$8" 0
   ${WriteRegStr2} $TmpVal "$0" "PathToExe" "$8\${FileMainEXE}" 0
 
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Uninstall"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Uninstall"
   ${WriteRegStr2} $TmpVal "$0" "Description" "${BrandFullNameInternal} ${AppVersion}$3 (${ARCH} ${AB_CD})" 0
 
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})"
   ${WriteRegStr2} $TmpVal  "$0" "" "${AppVersion}$3 (${ARCH} ${AB_CD})" 0
   ${If} "$3" == ""
     DeleteRegValue SHCTX "$0" "ESR"
@@ -464,14 +464,14 @@
     ${WriteRegDWORD2} $TmpVal "$0" "ESR" 1 0
   ${EndIf}
 
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal} ${AppVersion}$3\bin"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal} ${AppVersion}$3\bin"
   ${WriteRegStr2} $TmpVal "$0" "PathToExe" "$8\${FileMainEXE}" 0
 
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal} ${AppVersion}$3\extensions"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal} ${AppVersion}$3\extensions"
   ${WriteRegStr2} $TmpVal "$0" "Components" "$8\components" 0
   ${WriteRegStr2} $TmpVal "$0" "Plugins" "$8\plugins" 0
 
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal} ${AppVersion}$3"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal} ${AppVersion}$3"
   ${WriteRegStr2} $TmpVal "$0" "GeckoVer" "${GREVersion}" 0
   ${If} "$3" == ""
     DeleteRegValue SHCTX "$0" "ESR"
@@ -479,7 +479,7 @@
     ${WriteRegDWORD2} $TmpVal "$0" "ESR" 1 0
   ${EndIf}
 
-  StrCpy $0 "Software\Binary Outcast\${BrandFullNameInternal}$3"
+  StrCpy $0 "Software\BinOC\${BrandFullNameInternal}$3"
   ${WriteRegStr2} $TmpVal "$0" "" "${GREVersion}" 0
   ${WriteRegStr2} $TmpVal "$0" "CurrentVersion" "${AppVersion}$3 (${ARCH} ${AB_CD})" 0
 !macroend
@@ -565,7 +565,7 @@
 ; HKCU Software\Classes keys when associating handlers. The fix uses the merged
 ; view in HKCR to check for existance of an existing association. This macro
 ; cleans affected installations by removing the HKLM and HKCU value if it is set
-; to BorealisHTML when there is a value for PersistentHandler or by removing the
+; to MarinerHTML when there is a value for PersistentHandler or by removing the
 ; HKCU value when the HKLM value has a value other than an empty string.
 !macro FixBadFileAssociation FILE_TYPE
   ; Only delete the default value in case the key has values for OpenWithList,
@@ -574,16 +574,16 @@
   ReadRegStr $1 HKLM "Software\Classes\${FILE_TYPE}" ""
   ReadRegStr $2 HKCR "${FILE_TYPE}\PersistentHandler" ""
   ${If} "$2" != ""
-    ; Since there is a persistent handler remove BorealisHTML as the default
-    ; value from both HKCU and HKLM if it set to BorealisHTML.
-    ${If} "$0" == "BorealisHTML"
+    ; Since there is a persistent handler remove MarinerHTML as the default
+    ; value from both HKCU and HKLM if it set to MarinerHTML.
+    ${If} "$0" == "MarinerHTML"
       DeleteRegValue HKCU "Software\Classes\${FILE_TYPE}" ""
     ${EndIf}
-    ${If} "$1" == "BorealisHTML"
+    ${If} "$1" == "MarinerHTML"
       DeleteRegValue HKLM "Software\Classes\${FILE_TYPE}" ""
     ${EndIf}
-  ${ElseIf} "$0" == "BorealisHTML"
-    ; Since KHCU is set to BorealisHTML remove BorealisHTML as the default value
+  ${ElseIf} "$0" == "MarinerHTML"
+    ; Since KHCU is set to MarinerHTML remove MarinerHTML as the default value
     ; from HKCU if HKLM is set to a value other than an empty string.
     ${If} "$1" != ""
       DeleteRegValue HKCU "Software\Classes\${FILE_TYPE}" ""
@@ -637,17 +637,17 @@
   ; Only set the file and protocol handlers if the existing one under HKCR is
   ; for this install location.
 
-  ${IsHandlerForInstallDir} "BorealisHTML" $R9
+  ${IsHandlerForInstallDir} "MarinerHTML" $R9
   ${If} "$R9" == "true"
-    ; An empty string is used for the 5th param because BorealisHTML is not a
+    ; An empty string is used for the 5th param because MarinerHTML is not a
     ; protocol handler.
-    ${AddDisabledDDEHandlerValues} "BorealisHTML" "$2" "$8,1" \
+    ${AddDisabledDDEHandlerValues} "MarinerHTML" "$2" "$8,1" \
                                    "${AppRegName} HTML Document" ""
   ${EndIf}
 
-  ${IsHandlerForInstallDir} "BorealisURL" $R9
+  ${IsHandlerForInstallDir} "MarinerURL" $R9
   ${If} "$R9" == "true"
-    ${AddDisabledDDEHandlerValues} "BorealisURL" "$2" "$8,1" \
+    ${AddDisabledDDEHandlerValues} "MarinerURL" "$2" "$8,1" \
                                    "${AppRegName} URL" "true"
   ${EndIf}
 
@@ -675,16 +675,16 @@
 !macro RemoveDeprecatedKeys
   StrCpy $0 "SOFTWARE\Classes"
   ; Remove support for launching gopher urls from the shell during install or
-  ; update if the DefaultIcon is from Borealis.exe.
+  ; update if the DefaultIcon is from Mariner.exe.
   ${RegCleanAppHandler} "gopher"
 
   ; Remove support for launching chrome urls from the shell during install or
-  ; update if the DefaultIcon is from Borealis.exe (Bug 301073).
+  ; update if the DefaultIcon is from Mariner.exe (Bug 301073).
   ${RegCleanAppHandler} "chrome"
 
   ; Remove protocol handler registry keys added by the MS shim
-  DeleteRegKey HKLM "Software\Classes\Borealis.URL"
-  DeleteRegKey HKCU "Software\Classes\Borealis.URL"
+  DeleteRegKey HKLM "Software\Classes\Mariner.URL"
+  DeleteRegKey HKCU "Software\Classes\Mariner.URL"
 
   ; Delete gopher from Capabilities\URLAssociations if it is present.
   ${StrFilter} "${FileMainEXE}" "+" "" "" $R9
@@ -695,10 +695,10 @@
     DeleteRegValue HKLM "$0\Capabilities\URLAssociations" "gopher"
   ${EndUnless}
 
-  ; Delete gopher from the user's UrlAssociations if it points to BorealisURL.
+  ; Delete gopher from the user's UrlAssociations if it points to MarinerURL.
   StrCpy $0 "Software\Microsoft\Windows\Shell\Associations\UrlAssociations\gopher"
   ReadRegStr $2 HKCU "$0\UserChoice" "Progid"
-  ${If} "$2" == "BorealisURL"
+  ${If} "$2" == "MarinerURL"
     DeleteRegKey HKCU "$0"
   ${EndIf}
 !macroend
@@ -842,7 +842,7 @@
       ${If} ${AtLeastWin7}
         ; No need to check the default on Win8 and later
         ${If} ${AtMostWin2008R2}
-          ; Check if the Borealis is the http handler for this user
+          ; Check if the Mariner is the http handler for this user
           SetShellVarContext current ; Set SHCTX to the current user
           ${IsHandlerForInstallDir} "http" $R9
           ${If} $TmpVal == "HKLM"

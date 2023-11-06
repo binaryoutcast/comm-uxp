@@ -248,10 +248,10 @@ Section "-InstallStartCleanup"
   ${EndIf}
 
   ; setup the application model id registration value
-  ${InitHashAppModelId} "$INSTDIR" "Software\Binary Outcast\${AppName}\TaskBarIDs"
+  ${InitHashAppModelId} "$INSTDIR" "Software\BinOC\${AppName}\TaskBarIDs"
 
   ; Remove the updates directory for Vista and above
-  ${CleanUpdateDirectories} "Mozilla\Borealis" "Mozilla\updates"
+  ${CleanUpdateDirectories} "Mozilla\Mariner" "Mozilla\updates"
 
   ${RemoveDeprecatedFiles}
   ${RemovePrecompleteEntries} "false"
@@ -372,17 +372,17 @@ Section "-Application" APP_IDX
   ; it doesn't cause problems always add them.
   ${SetUninstallKeys}
 
-  ; On install always add the BorealisHTML and BorealisURL keys.
-  ; An empty string is used for the 5th param because BorealisHTML is not a
+  ; On install always add the MarinerHTML and MarinerURL keys.
+  ; An empty string is used for the 5th param because MarinerHTML is not a
   ; protocol handler.
   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
   StrCpy $2 "$\"$8$\" -osint -url $\"%1$\""
 
-  ; In Win8, the delegate execute handler picks up the value in BorealisURL and
-  ; BorealisHTML to launch the desktop browser when it needs to.
-  ${AddDisabledDDEHandlerValues} "BorealisHTML" "$2" "$8,1" \
+  ; In Win8, the delegate execute handler picks up the value in MarinerURL and
+  ; MarinerHTML to launch the desktop browser when it needs to.
+  ${AddDisabledDDEHandlerValues} "MarinerHTML" "$2" "$8,1" \
                                  "${AppRegName} Document" ""
-  ${AddDisabledDDEHandlerValues} "BorealisURL" "$2" "$8,1" "${AppRegName} URL" \
+  ${AddDisabledDDEHandlerValues} "MarinerURL" "$2" "$8,1" "${AppRegName} URL" \
                                  "true"
 
   ; For pre win8, the following keys should only be set if we can write to HKLM.
@@ -572,7 +572,7 @@ Section "-InstallEndCleanup"
       ; If we have something other than empty string now, write the value.
       ${If} "$0" != ""
         ClearErrors
-        WriteRegStr HKCU "Software\Binary Outcast\Borealis" "OldDefaultBrowserCommand" "$0"
+        WriteRegStr HKCU "Software\BinOC\Mariner" "OldDefaultBrowserCommand" "$0"
       ${EndIf}
 
       ${LogHeader} "Setting as the default browser"
@@ -588,7 +588,7 @@ Section "-InstallEndCleanup"
     ${ElseIfNot} ${Errors}
       ${LogHeader} "Writing default-browser opt-out"
       ClearErrors
-      WriteRegStr HKCU "Software\Binary Outcast\Borealis" "DefaultBrowserOptOut" "True"
+      WriteRegStr HKCU "Software\BinOC\Mariner" "DefaultBrowserOptOut" "True"
       ${If} ${Errors}
         ${LogMsg} "Error writing default-browser opt-out"
       ${EndIf}
@@ -957,14 +957,14 @@ Function preSummary
   WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" "Write Test"
   ${Unless} ${Errors}
     DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
-    ; Check if Borealis is the http handler for this user.
+    ; Check if Mariner is the http handler for this user.
     SetShellVarContext current ; Set SHCTX to the current user
     ${IsHandlerForInstallDir} "http" $R9
     ${If} $TmpVal == "HKLM"
       SetShellVarContext all ; Set SHCTX to all users
     ${EndIf}
-    ; If Borealis isn't the http handler for this user show the option to set
-    ; Borealis as the default browser.
+    ; If Mariner isn't the http handler for this user show the option to set
+    ; Mariner as the default browser.
     ${If} "$R9" != "true"
     ${AndIf} ${AtMostWin2008R2}
       WriteINIStr "$PLUGINSDIR\summary.ini" "Settings" NumFields "4"

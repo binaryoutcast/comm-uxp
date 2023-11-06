@@ -193,7 +193,7 @@ Section "Uninstall"
   ${EndIf}
 
   ; setup the application model id registration value
-  ${un.InitHashAppModelId} "$INSTDIR" "Software\Binary Outcast\${AppName}\TaskBarIDs"
+  ${un.InitHashAppModelId} "$INSTDIR" "Software\BinOC\${AppName}\TaskBarIDs"
 
   SetShellVarContext current  ; Set SHCTX to HKCU
   ${un.RegCleanMain} "Software\Mozilla"
@@ -207,11 +207,11 @@ Section "Uninstall"
   ${EndIf}
 
   ; Remove the updates directory for Vista and above
-  ${un.CleanUpdateDirectories} "Mozilla\Borealis" "Mozilla\updates"
+  ${un.CleanUpdateDirectories} "Mozilla\Mariner" "Mozilla\updates"
 
   ; Remove any app model id's stored in the registry for this install path
-  DeleteRegValue HKCU "Software\Binary Outcast\${AppName}\TaskBarIDs" "$INSTDIR"
-  DeleteRegValue HKLM "Software\Binary Outcast\${AppName}\TaskBarIDs" "$INSTDIR"
+  DeleteRegValue HKCU "Software\BinOC\${AppName}\TaskBarIDs" "$INSTDIR"
+  DeleteRegValue HKLM "Software\BinOC\${AppName}\TaskBarIDs" "$INSTDIR"
 
   ClearErrors
   WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" "Write Test"
@@ -227,26 +227,26 @@ Section "Uninstall"
     ${un.SetAppLSPCategories}
   ${EndIf}
 
-  ${un.RegCleanAppHandler} "BorealisURL"
-  ${un.RegCleanAppHandler} "BorealisHTML"
+  ${un.RegCleanAppHandler} "MarinerURL"
+  ${un.RegCleanAppHandler} "MarinerHTML"
   ${un.RegCleanProtocolHandler} "ftp"
   ${un.RegCleanProtocolHandler} "http"
   ${un.RegCleanProtocolHandler} "https"
 
   ClearErrors
-  ReadRegStr $R9 HKCR "BorealisHTML" ""
-  ; Don't clean up the file handlers if the BorealisHTML key still exists since
+  ReadRegStr $R9 HKCR "MarinerHTML" ""
+  ; Don't clean up the file handlers if the MarinerHTML key still exists since
   ; there should be a second installation that may be the default file handler
   ${If} ${Errors}
-    ${un.RegCleanFileHandler}  ".htm"   "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".html"  "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".shtml" "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".xht"   "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".xhtml" "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".oga"  "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".ogg"  "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".ogv"  "BorealisHTML"
-    ${un.RegCleanFileHandler}  ".webm"  "BorealisHTML"
+    ${un.RegCleanFileHandler}  ".htm"   "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".html"  "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".shtml" "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".xht"   "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".xhtml" "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".oga"  "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".ogg"  "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".ogv"  "MarinerHTML"
+    ${un.RegCleanFileHandler}  ".webm"  "MarinerHTML"
   ${EndIf}
 
   SetShellVarContext all  ; Set SHCTX to HKLM
@@ -265,7 +265,7 @@ Section "Uninstall"
   ; The StartMenuInternet registry key is independent of the default browser
   ; settings. The XPInstall base un-installer always removes this key if it is
   ; uninstalling the default browser and it will always replace the keys when
-  ; installing even if there is another install of Borealis that is set as the
+  ; installing even if there is another install of Mariner that is set as the
   ; default browser. Now the key is always updated on install but it is only
   ; removed if it refers to this install location.
   ${If} "$INSTDIR" == "$R1"
@@ -281,7 +281,7 @@ Section "Uninstall"
   ; The StartMenuInternet registry key is independent of the default browser
   ; settings. The XPInstall base un-installer always removes this key if it is
   ; uninstalling the default browser and it will always replace the keys when
-  ; installing even if there is another install of Borealis that is set as the
+  ; installing even if there is another install of Mariner that is set as the
   ; default browser. Now the key is always updated on install but it is only
   ; removed if it refers to this install location.
   ${If} "$INSTDIR" == "$R1"
@@ -299,7 +299,7 @@ Section "Uninstall"
     StrCpy $0 "Software\Microsoft\MediaPlayer\ShimInclusionList\plugin-container.exe"
     DeleteRegKey HKLM "$0"
     DeleteRegKey HKCU "$0"
-    StrCpy $0 "Software\Classes\MIME\Database\Content Type\application/x-xpinstall;app=Borealis"
+    StrCpy $0 "Software\Classes\MIME\Database\Content Type\application/x-xpinstall;app=Mariner"
     DeleteRegKey HKLM "$0"
     DeleteRegKey HKCU "$0"
   ${Else}
@@ -367,8 +367,8 @@ Section "Uninstall"
   ; Remove the installation directory if it is empty
   RmDir "$INSTDIR"
 
-  ; If Borealis.exe was successfully deleted yet we still need to restart to
-  ; remove other files create a dummy Borealis.exe.moz-delete to prevent the
+  ; If Mariner.exe was successfully deleted yet we still need to restart to
+  ; remove other files create a dummy Mariner.exe.moz-delete to prevent the
   ; installer from allowing an install without restart when it is required
   ; to complete an uninstall.
   ${If} ${RebootFlag}
@@ -391,12 +391,12 @@ Section "Uninstall"
   ; clients registry key by the OS under some conditions.
   System::Call "shell32::SHChangeNotify(i ${SHCNE_ASSOCCHANGED}, i 0, i 0, i 0)"
 
-  ; Users who uninstall then reinstall expecting Borealis to use a clean profile
-  ; may be surprised during first-run. This key is checked during startup of Borealis and
+  ; Users who uninstall then reinstall expecting Mariner to use a clean profile
+  ; may be surprised during first-run. This key is checked during startup of Mariner and
   ; subsequently deleted after checking. If the value is found during startup
-  ; the browser will offer to Reset Borealis. We use the UpdateChannel to match
-  ; uninstalls of Borealis-release with reinstalls of Borealis-release, for example.
-  WriteRegStr HKCU "Software\Binary Outcast\Borealis" "Uninstalled-${UpdateChannel}" "True"
+  ; the browser will offer to Reset Mariner. We use the UpdateChannel to match
+  ; uninstalls of Mariner-release with reinstalls of Mariner-release, for example.
+  WriteRegStr HKCU "Software\BinOC\Mariner" "Uninstalled-${UpdateChannel}" "True"
 
   ${un.IsFirewallSvcRunning}
   Pop $0
