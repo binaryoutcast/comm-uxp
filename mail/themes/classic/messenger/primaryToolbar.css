@@ -18,8 +18,8 @@
   border-top-width: 0;
 }
 
-@media (-moz-os-version: windows-win10) {
-  #navigation-toolbox { border: none; }
+@media (-moz-os-version: windows-win10) and (-moz-windows-theme: aero) {
+  #navigation-toolbox { border: none; };
 }
 %endif
 
